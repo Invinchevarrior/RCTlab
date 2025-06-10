@@ -362,3 +362,35 @@ body[data-theme='light'] .editor-title, .editor-root.light .editor-title {
 .code-runner-btn:hover {
   background: #0056b3;
 }
+
+.problem-description img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 12px auto;
+}
+.problem-description, .code-runner-question {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+.problem-description pre, .problem-description code {
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-x: auto;
+  background: #f8f8f8;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 15px;
+  margin: 6px 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+table th, table td {
+  vertical-align: middle !important;
+  text-align: center;
+}
+table td {
+  padding: 8px;
+}

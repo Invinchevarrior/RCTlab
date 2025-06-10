@@ -8,21 +8,30 @@ function Register() {
   const [success, setSuccess] = useState('');
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
     if (!username || !password) {
       setError('Username and password cannot be empty');
       return;
     }
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    if (users.find(u => u.username === username)) {
-      setError('Username already exists');
-      return;
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Registration failed');
+      } else {
+        setSuccess('Registration successful, redirecting to login...');
+        setTimeout(() => history.push('/login'), 1500);
+      }
+    } catch (err) {
+      setError('Network error');
     }
-    users.push({ username, password });
-    localStorage.setItem('users', JSON.stringify(users));
-    setSuccess('Registration successful, redirecting to login...');
-    setTimeout(() => history.push('/login'), 1500);
   };
 
   return (

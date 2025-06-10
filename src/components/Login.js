@@ -7,16 +7,26 @@ function Login() {
   const [error, setError] = useState('');
   const history = useHistory();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Simple local validation
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const user = users.find(u => u.username === username && u.password === password);
-    if (user) {
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      history.push('/');
-    } else {
-      setError('Incorrect username or password');
+    setError('');
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Login failed');
+      } else {
+        // 保存token和用户名
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('currentUser', JSON.stringify({ username: data.username }));
+        history.push('/');
+      }
+    } catch (err) {
+      setError('Network error');
     }
   };
 

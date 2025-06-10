@@ -5,7 +5,7 @@ import 'codemirror/theme/material.css';
 import 'codemirror/theme/eclipse.css';
 import 'codemirror/mode/python/python';
 import 'codemirror/mode/clike/clike';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 const DEFAULT_CODE = {
   'Python 2.7 (PyPy 7.3.12)': 'def add(a, b):\n    return a + b\n\nprint add(1, 2)',
@@ -23,12 +23,12 @@ const DEFAULT_CODE = {
   'C++ (Clang 9.0.1)': '#include <iostream>\nusing namespace std;\nint add(int a, int b) { return a + b; }\nint main() { cout << add(1, 2) << endl; return 0; }',
 };
 
-const SAMPLE_QUESTION = {
-  title: 'Add Two Numbers',
-  description: 'Write a function that returns the sum of two numbers.',
-  input: '1 2',
-  output: '3',
-};
+
+
+function useQuery() {
+  const { search } = useLocation();
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 
 // 自动生成所有主流语言的两数相加示例
 const GEN_ADD_CODE = (langName) => {
@@ -70,6 +70,10 @@ function CodeRunner() {
   const [warnings, setWarnings] = useState('');
   const [outputColor, setOutputColor] = useState('#23272f');
   const history = useHistory();
+  const query = useQuery();
+  const [problem, setProblem] = useState(null);
+  const [problemLoading, setProblemLoading] = useState(false);
+  const [problemError, setProblemError] = useState('');
 
   // 获取支持的语言列表
   useEffect(() => {
@@ -83,6 +87,11 @@ function CodeRunner() {
       });
       const langs = await resp.json();
       console.log('All Judge0 languages:', langs);
+      if (!Array.isArray(langs)) {
+        alert('Failed to fetch languages: API did not return an array.');
+        setLanguages([]);
+        return;
+      }
       // 支持 C, C++, Java, Python（所有非MPI）
       const filtered = langs.filter(l =>
         ((l.name.toLowerCase().includes('python') && !l.name.toLowerCase().includes('mpi')) ||
@@ -99,6 +108,26 @@ function CodeRunner() {
     }
     fetchLanguages();
   }, []);
+
+  useEffect(() => {
+    const id = query.get('id');
+    if (!id) return;
+    setProblemLoading(true);
+    setProblemError('');
+    fetch(`http://localhost:5000/api/problems/${id}`, {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) setProblemError(data.error);
+        else setProblem(data);
+        setProblemLoading(false);
+      })
+      .catch(() => {
+        setProblemError('Failed to load problem');
+        setProblemLoading(false);
+      });
+  }, [query]);
 
   // 切换语言时同步 id
   const handleLanguageChange = (e) => {
@@ -210,14 +239,30 @@ function CodeRunner() {
     <div className="code-runner-root">
       <div className="code-runner-header">
         <div className="code-runner-title">Code Runner</div>
-        <button className="code-runner-btn" onClick={() => history.push('/')}>Back to Editor</button>
+        <div>
+          <button className="code-runner-btn" onClick={() => history.push('/problems')} style={{marginRight: 8}}>Problems</button>
+          <button className="code-runner-btn" onClick={() => history.push('/')}>Back to Editor</button>
+        </div>
       </div>
       <div className="code-runner-main">
-        <div className="code-runner-question">
-          <h3>{SAMPLE_QUESTION.title}</h3>
-          <p>{SAMPLE_QUESTION.description}</p>
-          <div><b>Sample Input:</b> <pre>{SAMPLE_QUESTION.input}</pre></div>
-          <div><b>Sample Output:</b> <pre>{SAMPLE_QUESTION.output}</pre></div>
+        <div className="code-runner-question" style={{overflowWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%'}}>
+          {query.get('id') ? (
+            problemLoading ? <div>Loading...</div> : problemError ? <div style={{color:'red'}}>{problemError}</div> : problem && (
+              <div style={{padding: '0 0 12px 0'}}>
+                <h2 style={{marginBottom: 12, fontWeight: 700, fontSize: 24}}>{problem.title}</h2>
+                <div className="problem-description" style={{marginBottom: 18, fontSize: 16, lineHeight: 1.7, overflowWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%'}}>
+                  <div dangerouslySetInnerHTML={{__html: problem.description}} />
+                </div>
+              </div>
+            )
+          ) : (
+            <>
+              <h3>Add Two Numbers</h3>
+              <p>Write a function that returns the sum of two numbers.</p>
+              <div><b>Sample Input:</b> <pre>1 2</pre></div>
+              <div><b>Sample Output:</b> <pre>3</pre></div>
+            </>
+          )}
         </div>
         <div className="code-runner-editor">
           <div className="code-runner-controls">
