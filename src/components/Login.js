@@ -20,7 +20,7 @@ function Login() {
       if (!res.ok) {
         setError(data.error || 'Login failed');
       } else {
-        // 保存token和用户名
+        // Save token and user info to localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('currentUser', JSON.stringify({ username: data.username }));
         history.push('/');
@@ -29,9 +29,9 @@ function Login() {
       setError('Network error');
     }
   };
-
   return (
     <div className="auth-container">
+      <div className="welcome-banner">Welcome to the RCTlab</div>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <input

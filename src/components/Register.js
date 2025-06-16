@@ -33,9 +33,9 @@ function Register() {
       setError('Network error');
     }
   };
-
   return (
     <div className="auth-container">
+      <div className="welcome-banner">Welcome to the RCTlab</div>
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <input

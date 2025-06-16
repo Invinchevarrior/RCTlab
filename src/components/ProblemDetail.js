@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
-// 示例题库数据（与 Problems.js 保持一致）
+// This is a mock problem map. In a real application, this data would likely come from an API or database.
 const PROBLEM_MAP = {
   1: {
     id: 1,

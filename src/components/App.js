@@ -31,12 +31,146 @@ function App() {
 }
 
 function EditorPage() {
-  const [html, setHtml] = useLocalStorage('html', '')
-  const [css, setCss] = useLocalStorage('css', '')
-  const [js, setJs] = useLocalStorage('js', '')
+  const [html, setHtml] = useLocalStorage('html', `<div class="todo-app">
+  <h1>My Todo List</h1>
+  <div class="input-section">
+    <input type="text" id="todoInput" placeholder="Enter a new todo...">
+    <button onclick="addTodo()">Add</button>
+  </div>
+  <ul id="todoList">
+    <li>
+      <span>Learn React</span>
+      <button onclick="removeTodo(this)">Complete</button>
+    </li>
+    <li>
+      <span>Review JavaScript</span>
+      <button onclick="removeTodo(this)">Complete</button>
+    </li>
+  </ul>
+</div>`)
+  const [css, setCss] = useLocalStorage('css', `body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.todo-app {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    color: #1a73e8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #1557b0;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f8f9fa;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+li button {
+    background: #dc3545;
+    font-size: 14px;
+    padding: 4px 8px;
+}
+
+li button:hover {
+    background: #bb2d3b;
+}`)
+  const [js, setJs] = useLocalStorage('js', `function addTodo() {
+    const input = document.getElementById('todoInput');
+    const text = input.value.trim();
+    
+    if (text) {
+        const list = document.getElementById('todoList');
+        const li = document.createElement('li');
+        li.innerHTML = \`
+            <span>\${text}</span>
+            <button onclick="removeTodo(this)">Complete</button>
+        \`;
+        list.appendChild(li);
+        input.value = '';
+    }
+}
+
+function removeTodo(button) {
+    const li = button.parentElement;
+    li.style.opacity = '0';
+    li.style.transform = 'translateX(100px)';
+    li.style.transition = 'all 0.3s ease';
+    
+    setTimeout(() => {
+        li.remove();
+    }, 300);
+}
+
+// Add event listener for Enter key in input
+document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        addTodo();
+    }
+});`)
   const [srcDoc, setSrcDoc] = useState('')
   const [theme, setTheme] = useState('light')
-  const [widths, setWidths] = useState([33.33, 33.33, 33.34]) // 三栏宽度百分比
+  const [widths, setWidths] = useState([33.33, 33.33, 33.34]) // Three-column width percentage
   const history = useHistory()
   const user = JSON.parse(localStorage.getItem('currentUser') || '{}')
 
@@ -71,13 +205,13 @@ function EditorPage() {
     history.push('/problems')
   }
 
-  // 拖动分隔线
+  // Drag the divider
   const handleResize = (index, dx, parentWidth) => {
-    // index: 0=html/css分隔，1=css/js分隔
+    // index: 0=html/css divider, 1=css/js divider
     const total = widths[index] + widths[index + 1]
     let left = ((widths[index] * parentWidth + dx) / parentWidth) * 100
     let right = total - left
-    // 限制最小宽度10%
+    // Limit the minimum width to 10%
     if (left < 10) { left = 10; right = total - 10 }
     if (right < 10) { right = 10; left = total - 10 }
     const newWidths = [...widths]

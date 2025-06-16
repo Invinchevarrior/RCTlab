@@ -20,7 +20,7 @@ export default function Editor(props) {
   } = props
   const [open, setOpen] = useState(true)
 
-  // 主题映射
+  // Determine the CodeMirror theme based on the provided theme prop
   const codeMirrorTheme = theme === 'dark' ? 'material' : 'eclipse';
 
   function handleChange(editor, data, value) {
@@ -53,8 +53,17 @@ export default function Editor(props) {
           lineWrapping: true,
           lint: true,
           mode: language,
-            theme: codeMirrorTheme,
-          lineNumbers: true
+          theme: codeMirrorTheme,
+          lineNumbers: true,
+          viewportMargin: Infinity,
+          autoCloseBrackets: true,
+          matchBrackets: true,
+          autoCloseTags: true,
+          foldGutter: true,
+          gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+          extraKeys: {
+            'Ctrl-Space': 'autocomplete'
+          }
         }}
       />
       </div>

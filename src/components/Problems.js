@@ -25,7 +25,7 @@ function Problems() {
   const [newDifficulty, setNewDifficulty] = useState('Easy');
   const [newDesc, setNewDesc] = useState('');
 
-  // 拉取题库（分页+筛选）
+  // Problems fetching logic
   const fetchProblems = useCallback(async () => {
     setLoading(true);
     setError('');
@@ -43,7 +43,7 @@ function Problems() {
       else {
         setProblems(data.problems);
         setTotal(data.total);
-        // 动态收集所有标签
+        // dynamically set all tags
         const tags = Array.from(new Set(data.problems.flatMap(p => p.tags)));
         setAllTags(tags);
       }
@@ -57,7 +57,7 @@ function Problems() {
     fetchProblems();
   }, [fetchProblems]);
 
-  // 收藏/标记
+  // Toggle favorite and status logic
   const toggleFavorite = async (id) => {
     const p = problems.find(p => p._id === id);
     try {
@@ -69,7 +69,7 @@ function Problems() {
         },
         body: JSON.stringify({ problemId: id, favorite: !p.favorite })
       });
-      fetchProblems(); // 重新拉取
+      fetchProblems(); // Pull latest data
     } catch {}
   };
   const toggleStatus = async (id, status) => {
@@ -82,11 +82,11 @@ function Problems() {
         },
         body: JSON.stringify({ problemId: id, status })
       });
-      fetchProblems(); // 重新拉取
+      fetchProblems(); // Pull latest data
     } catch {}
   };
 
-  // 右上角按钮逻辑
+  // Navigation and theme handling
   const handleEditor = () => history.push('/');
   const handleCodeRunner = () => history.push('/coderunner');
   const handleLogout = () => {
@@ -101,7 +101,7 @@ function Problems() {
     localStorage.setItem('theme', newTheme);
   };
 
-  // 添加题目
+  // Add problem handling
   const handleAddProblem = async () => {
     if (!newTitle.trim()) return alert('Title required!');
     try {
@@ -120,18 +120,18 @@ function Problems() {
     setNewDesc('');
   };
 
-  // 多选标签处理
+  // Multi-select tags handling
   const handleTagSelect = (e) => {
     const options = Array.from(e.target.selectedOptions).map(o => o.value);
     setSelectedTags(options);
-    setPage(1); // 筛选时重置到第一页
+    setPage(1); // Reset to first page on filter
   };
   const handleNewTagsSelect = (e) => {
     const options = Array.from(e.target.selectedOptions).map(o => o.value);
     setNewTags(options);
   };
 
-  // 搜索和难度筛选时重置到第一页
+  // Reset to first page on search and difficulty filter
   const handleSearch = (e) => {
     setSearch(e.target.value);
     setPage(1);
@@ -141,7 +141,7 @@ function Problems() {
     setPage(1);
   };
 
-  // 分页控件
+  // Pagination controls
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const pageList = [];
   for (let i = 1; i <= totalPages; ++i) pageList.push(i);
@@ -215,7 +215,7 @@ function Problems() {
             ))}
           </tbody>
         </table>
-        {/* 分页控件 */}
+        {/* Pagination controls */}
         <div style={{ marginTop: 20, display: 'flex', gap: 8, justifyContent: 'center' }}>
           {pageList.map(pn => (
             <button

@@ -1,13 +1,20 @@
 import { useEffect, useState } from 'react'
 
-const PREFIX = 'codepen-clone-'
+const PREFIX = 'RCTlab-'
 
 export default function useLocalStorage(key, initialValue) {
   const prefixedKey = PREFIX + key
 
   const [value, setValue] = useState(() => {
     const jsonValue = localStorage.getItem(prefixedKey)
-    if (jsonValue != null) return JSON.parse(jsonValue)
+    if (jsonValue != null) {
+      const parsedValue = JSON.parse(jsonValue)
+      // if the parsed value is an empty string, return the initial value
+      if (parsedValue === '') {
+        return initialValue
+      }
+      return parsedValue
+    }
 
     if (typeof initialValue === 'function') {
       return initialValue()

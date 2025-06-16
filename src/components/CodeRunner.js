@@ -30,7 +30,7 @@ function useQuery() {
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 
-// 自动生成所有主流语言的两数相加示例
+// Automatically generate two-sum examples for all mainstream languages
 const GEN_ADD_CODE = (langName) => {
   const l = langName.toLowerCase();
   if (l.includes('python')) return 'def add(a, b):\n    return a + b\n\nprint(add(1, 2))';
@@ -75,7 +75,7 @@ function CodeRunner() {
   const [problemLoading, setProblemLoading] = useState(false);
   const [problemError, setProblemError] = useState('');
 
-  // 获取支持的语言列表
+  // Get the list of supported languages
   useEffect(() => {
     async function fetchLanguages() {
       const resp = await fetch('https://judge0-extra-ce.p.rapidapi.com/languages', {
@@ -92,7 +92,7 @@ function CodeRunner() {
         setLanguages([]);
         return;
       }
-      // 支持 C, C++, Java, Python（所有非MPI）
+      // Support C, C++, Java, Python (all non-MPI)
       const filtered = langs.filter(l =>
         ((l.name.toLowerCase().includes('python') && !l.name.toLowerCase().includes('mpi')) ||
         l.name.toLowerCase().includes('java') ||
@@ -100,7 +100,7 @@ function CodeRunner() {
         (l.name.toLowerCase().includes('c') && !l.name.toLowerCase().includes('c#')))
       );
       setLanguages(filtered);
-      // 默认选 Python 3.10（如有），否则选第一个
+      // Default to Python 3.10 (if available), otherwise select the first one
       const py310 = filtered.find(l => l.name.toLowerCase().includes('python 3.10'));
       setLanguage(py310 ? py310.name : filtered[0]?.name);
       setLanguageId(py310 ? py310.id : filtered[0]?.id);
@@ -129,7 +129,7 @@ function CodeRunner() {
       });
   }, [query]);
 
-  // 切换语言时同步 id
+  // Synchronize id when switching language
   const handleLanguageChange = (e) => {
     const langName = e.target.value;
     setLanguage(langName);
@@ -139,7 +139,7 @@ function CodeRunner() {
     setOutput('');
   };
 
-  // ControlledEditor 的 mode 适配
+  // Mode adaptation for ControlledEditor
   const getEditorMode = () => {
     if (language.toLowerCase().includes('java')) return 'text/x-java';
     if (language.toLowerCase().includes('c++')) return 'text/x-c++src';
@@ -206,7 +206,7 @@ function CodeRunner() {
         }
         await new Promise(r => setTimeout(r, 700));
       }
-      // 优化输出：只显示 stdout，stderr/compile_output 单独显示
+      // Optimize output: only show stdout, stderr/compile_output are displayed separately
       let mainOutput = (result.stdout && result.stdout.trim()) ? result.stdout : '';
       let warnOutput = '';
       let isError = false;
@@ -238,66 +238,148 @@ function CodeRunner() {
   return (
     <div className="code-runner-root">
       <div className="code-runner-header">
-        <div className="code-runner-title">Code Runner</div>
-        <div>
-          <button className="code-runner-btn" onClick={() => history.push('/problems')} style={{marginRight: 8}}>Problems</button>
-          <button className="code-runner-btn" onClick={() => history.push('/')}>Back to Editor</button>
+        <div className="code-runner-nav">
+          <div className="code-runner-title">Code Runner</div>
+          <div className="code-runner-actions">
+            <button className="code-runner-nav-btn" onClick={() => history.push('/problems')}>Problems</button>
+            <button className="code-runner-nav-btn" onClick={() => history.push('/')}>Back to Editor</button>
+          </div>
         </div>
       </div>
       <div className="code-runner-main">
-        <div className="code-runner-question" style={{overflowWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%'}}>
+        <div className="code-runner-question">
           {query.get('id') ? (
-            problemLoading ? <div>Loading...</div> : problemError ? <div style={{color:'red'}}>{problemError}</div> : problem && (
-              <div style={{padding: '0 0 12px 0'}}>
-                <h2 style={{marginBottom: 12, fontWeight: 700, fontSize: 24}}>{problem.title}</h2>
-                <div className="problem-description" style={{marginBottom: 18, fontSize: 16, lineHeight: 1.7, overflowWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%'}}>
-                  <div dangerouslySetInnerHTML={{__html: problem.description}} />
-                </div>
+            problemLoading ? (
+              <div className="loading">Loading...</div>
+            ) : problemError ? (
+              <div className="error-message">{problemError}</div>
+            ) : problem && (
+              <div className="problem-content">
+                <h2 className="problem-title">{problem.title}</h2>
+                <div className="problem-description" dangerouslySetInnerHTML={{__html: problem.description}} />
               </div>
             )
           ) : (
-            <>
-              <h3>Add Two Numbers</h3>
-              <p>Write a function that returns the sum of two numbers.</p>
-              <div><b>Sample Input:</b> <pre>1 2</pre></div>
-              <div><b>Sample Output:</b> <pre>3</pre></div>
-            </>
+            <div className="problem-content">
+              <h2 className="problem-title">Longest Palindromic Substring</h2>
+              <div className="problem-description">
+                <p className="description-text">Given a string <code>s</code>, return <em>the longest palindromic substring</em> in <code>s</code>.</p>
+                
+                <div className="example-section">
+                  <h3>Example 1:</h3>
+                  <div className="example-box">
+                    <div className="example-item">
+                      <span className="label">Input:</span>
+                      <code>s = "babad"</code>
+                    </div>
+                    <div className="example-item">
+                      <span className="label">Output:</span>
+                      <code>"bab"</code>
+                    </div>
+                    <div className="example-item">
+                      <span className="label">Explanation:</span>
+                      <span>"aba" is also a valid answer.</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="example-section">
+                  <h3>Example 2:</h3>
+                  <div className="example-box">
+                    <div className="example-item">
+                      <span className="label">Input:</span>
+                      <code>s = "cbbd"</code>
+                    </div>
+                    <div className="example-item">
+                      <span className="label">Output:</span>
+                      <code>"bb"</code>
+                    </div>
+                  </div>
+                </div>                <div className="constraints-section">
+                  <h3>Constraints:</h3>
+                  <ul className="constraints-list">
+                    <li>1 &lt;= s.length &lt;= 1000</li>
+                    <li>s consist of only digits and English letters</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           )}
         </div>
-        <div className="code-runner-editor">
-          <div className="code-runner-controls">
-            <select value={language} onChange={handleLanguageChange}>
-              {languages.map(l => (
-                <option key={l.id} value={l.name}>{l.name}</option>
-              ))}
-            </select>
-            <button className="code-runner-btn" onClick={handleRun} disabled={loading || !languageId}>
+        <div className="code-runner-workspace">
+          <div className="workspace-header">
+            <div className="language-selector">
+              <select value={language} onChange={handleLanguageChange} className="language-select">
+                {languages.map(l => (
+                  <option key={l.id} value={l.name}>{l.name}</option>
+                ))}
+              </select>
+            </div>
+            <button 
+              className={`run-button ${loading ? 'loading' : ''}`} 
+              onClick={handleRun} 
+              disabled={loading || !languageId}
+            >
               {loading ? 'Running...' : 'Run Code'}
             </button>
           </div>
-          <ControlledEditor
-            value={code}
-            onBeforeChange={(_e, _d, v) => setCode(v)}
-            options={{
-              mode: getEditorMode(),
-              theme: 'eclipse',
-              lineNumbers: true,
-              tabSize: 4,
-              indentUnit: 4,
-              lineWrapping: true,
-            }}
-          />
-          <div className="code-runner-io">
-            <div>
-              <div><b>Input</b></div>
-              <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Custom input" />
-            </div>
-            <div style={{ flex: 1 }}>
-              <div><b>Output</b></div>
-              <div className="code-runner-output" style={{ color: outputColor }}>{output}</div>
-            </div>
+          
+          <div className="editor-container">
+            <ControlledEditor
+              value={code}
+              onBeforeChange={(_e, _d, v) => setCode(v)}
+              className="code-editor"
+              options={{
+                mode: getEditorMode(),
+                theme: 'eclipse',
+                lineNumbers: true,
+                tabSize: 4,
+                indentUnit: 4,
+                lineWrapping: true,
+                foldGutter: true,
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                styleActiveLine: true
+              }}
+            />
           </div>
-          <div className="code-runner-warnings" style={{ color: '#d32f2f', marginTop: 8, whiteSpace: 'pre-wrap' }}>{warnings && (<><b>Warnings/Errors:</b><br />{warnings}</>)}</div>
+
+          <div className="console-section">
+            <div className="console-container">
+              <div className="console-input">
+                <div className="console-header">
+                  <span className="console-title">Input</span>
+                </div>
+                <textarea 
+                  value={input} 
+                  onChange={e => setInput(e.target.value)} 
+                  placeholder="Enter your test input here..."
+                  className="input-area"
+                />
+              </div>
+              <div className="console-output">
+                <div className="console-header">
+                  <span className="console-title">Output</span>
+                </div>
+                <div 
+                  className="output-area"
+                  style={{ color: outputColor }}
+                >
+                  {output || 'Run your code to see the output...'}
+                </div>
+              </div>
+            </div>
+            {warnings && (
+              <div className="warnings-section">
+                <div className="warning-header">
+                  <span className="warning-title">Warnings/Errors</span>
+                </div>
+                <div className="warning-content">
+                  {warnings}                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
