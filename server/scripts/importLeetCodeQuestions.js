@@ -3,14 +3,14 @@ const fs = require('fs');
 const path = require('path');
 const Problem = require('../models/Problem');
 
-const MONGO_URI = 'mongodb+srv://Peter:N7hPNnnt5UQ_uB6@cluster0.pjpstqp.mongodb.net/RCTlab?retryWrites=true&w=majority&appName=Cluster0'; // 替换为你的连接串
+const MONGO_URI = 'mongodb+srv://Peter:N7hPNnnt5UQ_uB6@cluster0.pjpstqp.mongodb.net/RCTlab?retryWrites=true&w=majority&appName=Cluster0'; 
 const JSON_PATH = path.join(__dirname, '../leetcode_questions.json');
 
 async function importQuestions() {
   await mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
   const data = JSON.parse(fs.readFileSync(JSON_PATH, 'utf-8'));
 
-  // 只导入有 title 的题目，并提取所需字段
+  // Only import questions with title and extract required fields
   const bulk = data
     .map(item => {
       const q = item?.data?.question;
@@ -29,7 +29,7 @@ async function importQuestions() {
     process.exit();
   }
 
-  // 可选：清空原有题库
+  // Optional: clear the original problem set
   // await Problem.deleteMany({});
 
   await Problem.insertMany(bulk);
