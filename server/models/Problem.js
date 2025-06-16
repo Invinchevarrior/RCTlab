@@ -5,7 +5,7 @@ const ProblemSchema = new mongoose.Schema({
   tags: [String],
   difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Easy' },
   description: String,
-  // 可扩展更多字段，如样例输入输出、限制等
+  // More fields can be extended, such as sample input/output, constraints, etc.
 });
 
 module.exports = mongoose.model('Problem', ProblemSchema); 
