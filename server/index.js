@@ -8,17 +8,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// TODO: MongoDB连接字符串请替换为你的云端MongoDB Atlas连接
+// TODO: Please replace the MongoDB connection string with your cloud MongoDB Atlas connection
 mongoose.connect('mongodb+srv://Peter:N7hPNnnt5UQ_uB6@cluster0.pjpstqp.mongodb.net/RCTlab?retryWrites=true&w=majority&appName=Cluster0', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 app.get('/', (req, res) => {
-  res.send('CodePen Clone API running');
+  res.send('RCTlab API is running');
 });
 
-// TODO: 用户、题库、刷题记录等API路由
+// TODO: API routes for user, problem set, problem records, etc.
 app.use('/api/auth', authRoutes);
 app.use('/api/problems', problemRoutes);
 
