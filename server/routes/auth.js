@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const router = express.Router();
 
-const JWT_SECRET = 'your_jwt_secret'; // 建议用环境变量
+const JWT_SECRET = '123456'; 
 
-// 注册
+// Register
 router.post('/register', async (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
@@ -18,7 +18,7 @@ router.post('/register', async (req, res) => {
   res.json({ message: 'Registered successfully' });
 });
 
-// 登录
+// Login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });

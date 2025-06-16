@@ -4,9 +4,9 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
-const JWT_SECRET = 'your_jwt_secret';
+const JWT_SECRET = '123456'; // Use a secure secret in production
 
-// 鉴权中间件
+// Authentication middleware
 function auth(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'No token' });
@@ -18,7 +18,7 @@ function auth(req, res, next) {
   }
 }
 
-// 分页+筛选+简要字段
+// Pagination + filter + brief fields
 router.get('/', auth, async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = 100;
@@ -32,7 +32,7 @@ router.get('/', auth, async (req, res) => {
   const problems = await Problem.find(filter, { title: 1, tags: 1, difficulty: 1 })
     .skip(skip)
     .limit(limit);
-  // 合并用户刷题状态
+  // Merge user problem status
   const user = await User.findOne({ username: req.user.username });
   const problemsWithStatus = problems.map(p => {
     const up = user.problems.find(up => up.problemId === p._id.toString());
@@ -45,14 +45,14 @@ router.get('/', auth, async (req, res) => {
   res.json({ problems: problemsWithStatus, total });
 });
 
-// 获取题目详情
+// Get problem details
 router.get('/:id', auth, async (req, res) => {
   const problem = await Problem.findById(req.params.id);
   if (!problem) return res.status(404).json({ error: 'Not found' });
   res.json(problem);
 });
 
-// 添加新题目（管理员/开发用）
+// Add new problem (for admin/developer)
 router.post('/', async (req, res) => {
   const { title, tags, difficulty, description } = req.body;
   if (!title) return res.status(400).json({ error: 'Title required' });
@@ -61,7 +61,7 @@ router.post('/', async (req, res) => {
   res.json({ message: 'Problem added', problem });
 });
 
-// 更新题目状态（status/favorite）
+// Update problem status (status/favorite)
 router.post('/status', auth, async (req, res) => {
   const { problemId, status, favorite } = req.body;
   const user = await User.findOne({ username: req.user.username });
