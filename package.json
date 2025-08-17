@@ -10,11 +10,13 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "codemirror": "^5.57.0",
+    "prismjs": "^1.30.0",
     "react": "^16.13.1",
     "react-codemirror2": "^7.2.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.3.4",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "react-simple-code-editor": "^0.14.1"
   },
   "scripts": {
     "start": "set NODE_OPTIONS=--openssl-legacy-provider && react-scripts start",
