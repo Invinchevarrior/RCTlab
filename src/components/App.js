@@ -7,6 +7,7 @@ import useLocalStorage from '../hooks/useLocalStorage'
 import CodeRunner from './CodeRunner'
 import Problems from './Problems'
 import ProblemDetail from './ProblemDetail'
+import MobileEmulator from './MobileEmulator'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/coderunner" component={CodeRunner} />
       <Route path="/problems/:id" component={ProblemDetail} />
       <Route path="/problems" component={Problems} />
+      <Route path="/emulator" component={MobileEmulator} />
       <Route
         exact
         path="/"
@@ -227,6 +229,9 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
         <div className="toolbar">
           <button onClick={handleProblems}>Problems</button>
           <button onClick={handleCodeRunner}>Code Runner</button>
+          <button onClick={() => history.push('/emulator')}>
+            Mobile Emulator
+          </button>
           <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
             {theme === 'light' ? 'Dark Theme' : 'Light Theme'}
           </button>

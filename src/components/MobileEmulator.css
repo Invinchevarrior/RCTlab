@@ -1,0 +1,202 @@
+body {
+  overflow-x: hidden;
+}
+
+.mobile-emulator-container {
+  display: flex;
+  height: 92vh;
+  overflow-x: hidden;
+}
+.emulator-left {
+  flex: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+  min-width: 0;
+}
+.emulator-right {
+  flex: 7;
+  padding: 32px 40px 32px 40px;
+  background: #fff;
+  border-left: 1px solid #eee;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+.emulator-phone-frame {
+  width: 320px;
+  height: 640px;
+  border: 16px solid #222;
+  border-radius: 36px;
+  background: #111;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.emulator-phone-screen {
+  width: 288px;
+  height: 608px;
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+}
+.emulator-info-bar {
+  display: flex;
+  align-items: center;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 8px 16px;
+  border-radius: 8px 8px 0 0;
+  font-size: 15px;
+  margin-bottom: 0;
+  box-shadow: 0 1px 4px rgba(25, 118, 210, 0.06);
+  font-weight: 500;
+}
+.emulator-info-bar img {
+  width: 22px;
+  height: 22px;
+  margin-right: 10px;
+}
+.emulator-code-editor {
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+  min-width: 0;
+  background: #fff;
+  font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 0;
+  border-radius: 12px;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 0;
+  color: #222;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Make the code editor content fill and scroll inside the white area */
+.emulator-code-editor .CodeMirror {
+  height: 100% !important;
+  min-height: 100%;
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.emulator-code-editor .CodeMirror-scroll {
+  height: 100% !important;
+  min-height: 100%;
+  max-height: 100%;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  border-radius: 12px;
+}
+.emulator-code-editor textarea {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  font-size: 14px;
+  font-family: 'Fira Mono', monospace;
+  resize: vertical;
+}
+.emulator-code-editor::-webkit-scrollbar {
+  height: 8px;
+  background: #eee;
+}
+.emulator-code-editor::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+.emulator-code-editor .CodeMirror-lines {
+  padding-left: 0 !important;
+}
+.emulator-code-editor .CodeMirror-gutters {
+  background: #f5f5f5;
+  border-right: 1px solid #eee;
+  padding-left: 0 !important;
+  min-width: 38px;
+}
+.mobile-emulator-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.mobile-emulator-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px 8px 32px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+.mobile-emulator-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: black;
+}
+.mobile-emulator-back {
+  background: #1a73e8;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.mobile-emulator-back:hover {
+  background: #1557b0;
+}
+
+/* Custom deep/vivid syntax highlighting for code area in emulator */
+.emulator-code-editor .cm-keyword {
+  color: #0d47a1 !important;
+  font-weight: bold;
+}
+.emulator-code-editor .cm-def {
+  color: #1565c0 !important;
+}
+.emulator-code-editor .cm-variable {
+  color: #b71c1c !important;
+}
+.emulator-code-editor .cm-variable-2 {
+  color: #6a1b9a !important;
+}
+.emulator-code-editor .cm-variable-3 {
+  color: #00897b !important;
+}
+.emulator-code-editor .cm-string {
+  color: #2e7d32 !important;
+}
+.emulator-code-editor .cm-number {
+  color: #c62828 !important;
+}
+.emulator-code-editor .cm-comment {
+  color: #757575 !important;
+  font-style: italic;
+}
+.emulator-code-editor .cm-property {
+  color: #ad1457 !important;
+}
+.emulator-code-editor .cm-operator {
+  color: #37474f !important;
+}
+.emulator-code-editor .cm-builtin {
+  color: #ef6c00 !important;
+}
+.emulator-code-editor .cm-meta {
+  color: #00838f !important;
+} 
