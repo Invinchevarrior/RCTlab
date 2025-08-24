@@ -4,18 +4,18 @@ import React, { useRef } from 'react';
 import Editor from 'react-simple-code-editor';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
-// 为了配合深色主题，可以引入一个深色的Prism主题
+// for dark theme, you can import a dark prism theme
 import 'prismjs/themes/prism.css'; 
 import './EmulatorCodeEditor.css';
 
 function EmulatorCodeEditor({ code, setCode }) {
   const lineNumbersRef = useRef(null);
 
-  // 1. 简化高亮函数：只进行语法高亮，这是修复光标位置的关键！
+  // 1. simplify the highlight function: only do syntax highlighting, this is the key to fix the cursor position!
   const highlightWithPrism = (code) =>
     Prism.highlight(code, Prism.languages.jsx, 'jsx');
 
-  // 2. 同步滚动：当代码区滚动时，同步滚动行号区
+  // 2. synchronize scrolling: when the code area scrolls, synchronize the line number area
   const handleScroll = (event) => {
     if (lineNumbersRef.current) {
       lineNumbersRef.current.scrollTop = event.target.scrollTop;
@@ -29,7 +29,7 @@ function EmulatorCodeEditor({ code, setCode }) {
   return (
     <div className="emulator-code-editor">
       <h3>React Native Code</h3>
-      {/* 3. 新的布局：一个包含行号和编辑器的容器 */}
+      {/* 3. new layout: a container that contains the line numbers and the editor */}
       <div className="emulator-editor-container">
         <div className="emulator-line-numbers" ref={lineNumbersRef}>
           {lineNumbers.map(num => (
@@ -40,15 +40,15 @@ function EmulatorCodeEditor({ code, setCode }) {
           value={code}
           onValueChange={setCode}
           highlight={highlightWithPrism}
-          padding={12} // 统一的内边距
+          padding={12} // uniform padding
           textareaId="emulator-code-editor-textarea"
-          className="emulator-editor-main" // 用于定位和应用样式的Class
-          onScroll={handleScroll} // 监听滚动事件
+          className="emulator-editor-main" // for positioning and applying styles
+          onScroll={handleScroll} // listen to scroll events
           style={{
             fontFamily: 'Fira Mono, monospace',
             fontSize: 14,
-            lineHeight: 1.4, // 紧凑的行高
-            // 其他布局样式全部移到CSS文件中
+            lineHeight: 1.4, // compact line height
+            // all other layout styles are moved to the CSS file
           }}
         />
       </div>

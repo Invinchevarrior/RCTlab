@@ -30,7 +30,12 @@ function Register() {
         setTimeout(() => history.push('/login'), 1500);
       }
     } catch (err) {
-      setError('Network error');
+      // Check if it's a network error or other type of error
+      if (err.name === 'TypeError' && err.message.includes('fetch')) {
+        setError('Network error - Please check your connection');
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
   return (

@@ -82,7 +82,7 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 
-/* 行号列的样式 */
+/* line numbers */
 .line-numbers {
   width: 44px;
   padding: 12px 0;
@@ -104,19 +104,19 @@ body {
   box-sizing: border-box;
 }
 
-/* react-simple-code-editor 组件的容器样式 */
+/* react-simple-code-editor container */
 .editor-main {
   flex-grow: 1;
   background: transparent;
   color: #222;
   min-width: 0;
   height: 100%;
-  /* 只允许外层滚动，内层不滚动 */
+  /* only allow outer scroll, inner scroll is not allowed */
   overflow: visible !important;
   position: relative;
 }
 
-/* 确保底层的 textarea 和 pre 元素能正确滚动和显示 */
+/* ensure the textarea and pre elements can scroll and display correctly */
 .editor-main textarea,
 .editor-main pre {
   outline: none !important;
@@ -132,7 +132,7 @@ body {
   caret-color: #222;
 }
 
-/* 覆盖 PrismJS 的主题背景，使其透明 */
+/* override PrismJS theme background, make it transparent */
 .editor-main pre[class*="language-"] {
   background: transparent !important;
   margin: 0 !important;
@@ -140,7 +140,7 @@ body {
   color: #222;
 }
 
-/* 外部滚动条美化 */
+/* external scrollbar beautification */
 .editor-container::-webkit-scrollbar {
   width: 8px;
   background: #eee;
@@ -158,18 +158,18 @@ body {
   scrollbar-color: #ccc #eee;
 }
 
-/* 选中高亮 */
+/* selected highlight */
 .editor-main textarea::selection,
 .editor-main pre::selection {
   background: #cce2ff;
 }
 
-/* 光标颜色 */
+/* cursor color */
 .editor-main textarea {
   caret-color: #222;
 }
 
-/* 解决 react-simple-code-editor 光标定位异常问题 */
+/* fix the problem of cursor positioning in react-simple-code-editor */
 .editor-main textarea {
   position: absolute !important;
   top: 0;
@@ -180,7 +180,7 @@ body {
   background: transparent;
   z-index: 2;
   color: transparent;
-  /* 只显示光标，不显示文字 */
+  /* only show cursor, not show text */
 }
 
 .editor-main pre {

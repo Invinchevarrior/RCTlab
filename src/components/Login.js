@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import api from '../utils/api';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -11,22 +12,25 @@ function Login() {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || 'Login failed');
-      } else {
+      const response = await api.post('/api/auth/login', { username, password });
+      const data = response.data;
+      if (response.status === 200) {
         // Save token and user info to localStorage
         localStorage.setItem('token', data.token);
         localStorage.setItem('currentUser', JSON.stringify({ username: data.username }));
         history.push('/');
+      } else {
+        setError(data.error || 'Login failed');
       }
     } catch (err) {
-      setError('Network error');
+      // Check if it's a response error with specific error message
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);
+      } else if (err.message === 'Network Error') {
+        setError('Network error - Please check your connection');
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
   return (
