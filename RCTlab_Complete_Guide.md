@@ -58,7 +58,7 @@ RCTlab/
 
 1) Clone the repository
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/Invinchevarrior/RCTlab.git)
 cd RCTlab
 ```
 
@@ -256,10 +256,11 @@ Run these from Windows PowerShell or Command Prompt as needed.
 
 ## License
 
-MIT License.
+GPL-3.0 license.
 
 ## Support
 
 Open an issue or contact the maintainers.
+
 
 
