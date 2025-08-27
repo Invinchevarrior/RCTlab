@@ -44,7 +44,7 @@ For a comprehensive guide covering features, setup, AI Chat, Judge0, troubleshoo
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Invinchevarrior/RCTlab.git
    cd RCTlab
    ```
 
@@ -140,7 +140,7 @@ RCTlab/
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the GPL-3.0 license.
 
 ## Support
 
