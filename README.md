@@ -2,6 +2,8 @@
 
 A React-based coding platform for learning and practicing programming problems.
 
+For a comprehensive guide covering features, setup, AI Chat, Judge0, troubleshooting and more, see: `RCTlab_Complete_Guide.md`.
+
 ## Features
 
 - **Code Editor**: Built-in code editor with syntax highlighting
@@ -138,8 +140,8 @@ RCTlab/
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0.
+This project is licensed under the MIT License.
 
 ## Support
 
-For questions or issues, please open an issue on GitHub or contact the developer.
+For questions or issues, please open an issue on GitHub or contact the development team.
