@@ -448,6 +448,14 @@ body[data-theme='light'] .editor-title, .editor-root.light .editor-title {
   background: #0056b3;
 }
 
+.ai-chat-btn {
+  background: #17a2b8;
+}
+
+.ai-chat-btn:hover {
+  background: #138496;
+}
+
 .code-runner-main {
   flex: 1;
   display: flex;
@@ -661,4 +669,60 @@ code {
   justify-content: center;
   font-weight: 500;
   padding: 0 16px;
+}
+
+.chat-pane {
+  height: 40vh; /* Adjust height as needed */
+}
+
+/* AI Chat Panel Styles */
+.ai-chat-panel {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  width: 400px;
+  height: 600px;
+  z-index: 1000;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+  border: 1px solid #e9ecef;
+  animation: slideInRight 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.ai-chat-panel .chat-container {
+  height: 100%;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+/* Responsive design for AI chat */
+@media (max-width: 1200px) {
+  .ai-chat-panel {
+    width: 350px;
+    height: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ai-chat-panel {
+    position: fixed;
+    top: 70px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+    height: 400px;
+  }
 }
