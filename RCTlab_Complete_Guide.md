@@ -58,7 +58,7 @@ RCTlab/
 
 1) Clone the repository
 ```bash
-git clone [<repository-url>](https://github.com/Invinchevarrior/RCTlab.git)
+git clone https://github.com/Invinchevarrior/RCTlab.git
 cd RCTlab
 ```
 
@@ -261,6 +261,7 @@ GPL-3.0 license.
 ## Support
 
 Open an issue or contact the maintainers.
+
 
 
 
