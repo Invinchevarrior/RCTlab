@@ -8,27 +8,33 @@ import CodeRunner from './CodeRunner'
 import Problems from './Problems'
 import ProblemDetail from './ProblemDetail'
 import MobileEmulator from './MobileEmulator'
+import GlobalChatManager from './GlobalChatManager'; 
 
 function App() {
   return (
-    <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route path="/coderunner" component={CodeRunner} />
-      <Route path="/problems/:id" component={ProblemDetail} />
-      <Route path="/problems" component={Problems} />
-      <Route path="/emulator" component={MobileEmulator} />
-      <Route
-        exact
-        path="/"
-        render={() =>
-          localStorage.getItem('currentUser')
-            ? <EditorPage />
-            : <Redirect to="/login" />
-        }
-      />
-      <Redirect to="/login" />
-    </Switch>
+    <>
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/coderunner" component={CodeRunner} />
+        <Route path="/problems/:id" component={ProblemDetail} />
+        <Route path="/problems" component={Problems} />
+        <Route path="/emulator" component={MobileEmulator} />
+        <Route
+          exact
+          path="/"
+          render={() =>
+            localStorage.getItem('currentUser')
+              ? <EditorPage />
+              : <Redirect to="/login" />
+          }
+        />
+        <Redirect to="/login" />
+      </Switch>
+      
+      {/* global AI chat manager */}
+      <GlobalChatManager />
+    </>
   )
 }
 
@@ -176,6 +182,7 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
   const history = useHistory()
   const user = JSON.parse(localStorage.getItem('currentUser') || '{}')
 
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setSrcDoc(`
@@ -207,6 +214,22 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
     history.push('/problems')
   }
 
+  // listen to global code generation event
+  useEffect(() => {
+    const handleGlobalCodeGenerated = (event) => {
+      const { html, css, js } = event.detail;
+      if (html) setHtml(html);
+      if (css) setCss(css);
+      if (js) setJs(js);
+    };
+
+    window.addEventListener('codeGenerated', handleGlobalCodeGenerated);
+    
+    return () => {
+      window.removeEventListener('codeGenerated', handleGlobalCodeGenerated);
+    };
+  }, [setHtml, setCss, setJs]);
+
   // Drag the divider
   const handleResize = (index, dx, parentWidth) => {
     // index: 0=html/css divider, 1=css/js divider
@@ -232,12 +255,26 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
           <button onClick={() => history.push('/emulator')}>
             Mobile Emulator
           </button>
+                    <button
+            onClick={() => {
+              // trigger global chat event
+              window.dispatchEvent(new CustomEvent('globalChatToggle'));
+            }}
+            style={{
+              background: '#17a2b8',
+              color: 'white',
+              fontWeight: 'bold'
+            }}
+          >
+            AI Chat
+          </button>
           <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
             {theme === 'light' ? 'Dark Theme' : 'Light Theme'}
           </button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </div>
+      
       <div className="pane top-pane" style={{ display: 'flex', width: '100%' }}>
         <Editor
           language="xml"

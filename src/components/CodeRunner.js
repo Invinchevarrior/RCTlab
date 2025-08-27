@@ -164,7 +164,7 @@ function CodeRunner() {
         headers: {
           'Content-Type': 'application/json',
           'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-          'x-rapidapi-key': 'your-api-key',
+          'x-rapidapi-key': 'dcae8c75f0msh8da4bab5dfa0d1fp1b77e7jsn3fb20c2b9452',
         },
         body: JSON.stringify(payload),
       });
@@ -243,6 +243,14 @@ function CodeRunner() {
           <div className="code-runner-actions">
             <button className="code-runner-nav-btn" onClick={() => history.push('/problems')}>Problems</button>
             <button className="code-runner-nav-btn" onClick={() => history.push('/')}>Back to Editor</button>
+            <button 
+              className="code-runner-nav-btn ai-chat-btn" 
+              onClick={() => {
+                window.dispatchEvent(new CustomEvent('globalChatToggle'));
+              }}
+            >
+              AI Chat
+            </button>
           </div>
         </div>
       </div>
@@ -387,4 +395,3 @@ function CodeRunner() {
 }
 
 export default CodeRunner; 
-

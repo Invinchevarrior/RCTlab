@@ -138,27 +138,57 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 32px 8px 32px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #eee;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 12px 12px 0 0;
 }
+
 .mobile-emulator-title {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: bold;
-  color: black;
 }
-.mobile-emulator-back {
-  background: #1a73e8;
-  color: #fff;
+
+.mobile-emulator-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.mobile-emulator-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
   border: none;
-  border-radius: 4px;
-  padding: 8px 20px;
-  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
 }
-.mobile-emulator-back:hover {
-  background: #1557b0;
+
+.mobile-emulator-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.ai-chat-btn {
+  background: rgba(23, 162, 184, 0.8);
+}
+
+.ai-chat-btn:hover {
+  background: rgba(23, 162, 184, 1);
+}
+
+.mobile-emulator-back {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
 }
 
 /* Custom deep/vivid syntax highlighting for code area in emulator */

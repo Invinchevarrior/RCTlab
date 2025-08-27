@@ -101,7 +101,17 @@ function MobileEmulator() {
     <div className="mobile-emulator-root">
       <div className="mobile-emulator-header">
         <div className="mobile-emulator-title">Mobile Emulator</div>
-        <button className="mobile-emulator-back" onClick={() => history.push('/')}>Back to Editor</button>
+        <div className="mobile-emulator-actions">
+          <button 
+            className="mobile-emulator-btn ai-chat-btn" 
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('globalChatToggle'));
+            }}
+          >
+            AI Chat
+          </button>
+          <button className="mobile-emulator-back" onClick={() => history.push('/')}>Back to Editor</button>
+        </div>
       </div>
       <div className="mobile-emulator-container">
         <div className="emulator-left">
