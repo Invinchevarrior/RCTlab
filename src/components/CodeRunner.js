@@ -164,7 +164,7 @@ function CodeRunner() {
         headers: {
           'Content-Type': 'application/json',
           'x-rapidapi-host': 'judge0-extra-ce.p.rapidapi.com',
-          'x-rapidapi-key': 'dcae8c75f0msh8da4bab5dfa0d1fp1b77e7jsn3fb20c2b9452',
+          'x-rapidapi-key': 'your-api-key',
         },
         body: JSON.stringify(payload),
       });
@@ -387,3 +387,4 @@ function CodeRunner() {
 }
 
 export default CodeRunner; 
+
