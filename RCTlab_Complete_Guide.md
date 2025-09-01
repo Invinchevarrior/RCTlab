@@ -4,15 +4,20 @@ A comprehensive guide to RCTlab: features, setup, configuration, usage, troubles
 
 ## Overview
 
-RCTlab is a React-based coding platform for learning and practicing programming problems. It includes a built-in editor, problem sets, code execution via Judge0, a mobile emulator, and an AI Chat assistant with rich UI/UX features.
+RCTlab is a React-based coding platform for learning and practicing programming problems. It includes a built-in editor, problem sets, code execution via Judge0, an advanced mobile emulator with multi-device support, and an AI Chat assistant with rich UI/UX features. The platform now features enhanced error handling, real-time code compilation, and responsive design testing capabilities.
 
 ## Features
 
-- **Code Editor**: Syntax highlighting, integrated editor, and code execution
+- **Advanced Code Editor**: Syntax highlighting, auto-completion, real-time error detection, and code execution
 - **Problem Sets**: Curated challenges with details and status tracking
 - **Code Execution**: Judge0 integration (submit and poll results)
 - **AI Chat Assistant**: Draggable, resizable, markdown-rendered chat with code extraction and copy buttons
-- **Mobile Emulator**: Preview and interact with mobile layouts
+- **Enhanced Mobile Emulator**: Multi-device emulation with advanced features
+  - **Device Support**: iPhone SE (2nd gen), iPhone 12 Pro Max, Android Medium/Large, Pixel Tablet
+  - **Smooth Transitions**: Automatic scaling and smooth device switching animations
+  - **Real-time Preview**: Live React Native code compilation with error handling
+  - **Advanced Demo**: Feature-rich Todo List with priority management, filtering, and CRUD operations
+  - **Responsive Design**: Adaptive layout that works across all device sizes
 - **Authentication**: Register/Login with JWT
 - **Progress Tracking**: Track solved and attempted problems
 
@@ -20,9 +25,12 @@ RCTlab is a React-based coding platform for learning and practicing programming 
 
 ### Frontend
 - React 16.x, React Router DOM
-- Axios
-- CodeMirror/Prism.js for editing and highlighting
-- Webpack
+- Axios for API communication
+- CodeMirror for advanced code editing with syntax highlighting
+- Lodash for utility functions and performance optimization (debouncing)
+- PropTypes for runtime type validation
+- Error boundaries for robust error handling
+- Webpack for bundling
 
 ### Backend
 - Node.js + Express
@@ -164,6 +172,32 @@ Tips:
 - Inline-code background, headline borders
 - Accessible sizes for desktop and mobile
 
+## Mobile Emulator - Advanced Features
+
+### Device Support and Scaling
+- **Multi-Device Support**: iPhone SE (2nd gen), iPhone 12 Pro Max, Android Medium (360x740), Android Large (412x915), Pixel Tablet (834x1194)
+- **Automatic Scaling**: Devices automatically scale to fit the available space while maintaining aspect ratio
+- **Smooth Transitions**: 0.4s cubic-bezier animations for seamless device switching
+- **Responsive Layout**: Emulator adapts to different screen sizes and orientations
+
+### Real-time Code Compilation
+- **Live Preview**: React Native code compiles and renders in real-time
+- **Error Handling**: Comprehensive error detection with friendly error messages and suggestions
+- **Code Transformation**: Automatic conversion of React Native syntax to web-compatible code
+- **Performance Optimization**: Debounced compilation (500ms) and code caching for better performance
+
+### Advanced Demo Application
+- **Feature-Rich Todo List**: Complete CRUD operations with priority management
+- **Priority System**: High, Medium, Low priority levels with color-coded badges
+- **Filtering**: All, Active, Completed task filtering
+- **Edit Mode**: Inline editing with save/cancel functionality
+- **Responsive Design**: Mobile-first layout that adapts to different screen sizes
+
+### Error Boundary Implementation
+- **Runtime Error Protection**: Prevents app crashes from user code errors
+- **Graceful Degradation**: Shows friendly error messages instead of white screens
+- **Error Recovery**: Automatic recovery when code is fixed
+
 ## AI Chat Configuration
 
 - API key location (if applicable to your setup): `src/components/Chat.js` (set your provider key)
@@ -199,10 +233,15 @@ Run these from Windows PowerShell or Command Prompt as needed.
 
 ### Mobile Emulator
 1. Open the Mobile Emulator page
-2. Preview and test mobile-oriented UI
+2. Select device type from dropdown (iPhone SE, iPhone 12 Pro Max, Android Medium/Large, Pixel Tablet)
+3. Write or edit React Native code in the editor
+4. Preview real-time changes in the emulator
+5. Test responsive design across different screen sizes
+6. Use the advanced Todo List demo to understand mobile UI patterns
 
 ## Troubleshooting
 
+### General Issues
 - **API call failures (Chat)**: verify API key and model availability
 - **Judge0 errors**: ensure Vite env variables are set; validate URL/host/key
 - **Markdown not rendering**: confirm formatter is applied and HTML injected via `dangerouslySetInnerHTML`
@@ -210,6 +249,14 @@ Run these from Windows PowerShell or Command Prompt as needed.
 - **Chat window cannot move/resize**: ensure single instance usage and current state (position/size) drive rendering
 - **Minimize loses state**: confirm saved position/size are restored on unminimize and instance is unique
 - **Copy buttons not working**: Clipboard API requires secure context (HTTPS) or user gesture
+
+### Mobile Emulator Issues
+- **Device not scaling properly**: check browser viewport size and ensure sufficient space for device frame
+- **Code compilation errors**: verify React Native syntax and check for missing imports or undefined variables
+- **White screen in emulator**: check browser console for JavaScript errors; ensure Babel is loaded
+- **Layout overflow on small devices**: verify responsive design implementation in user code
+- **Slow compilation**: check for infinite loops or heavy computations in user code
+- **Error boundary not catching errors**: ensure ErrorBoundary component is properly wrapping user components
 
 ## Development Guidelines
 
@@ -234,8 +281,18 @@ Run these from Windows PowerShell or Command Prompt as needed.
 - Enable CORS only for trusted origins
 - Hash passwords (bcrypt) and sign JWT securely
 
-## Changelog Highlights (Chat)
+## Changelog Highlights
 
+### Latest Updates (Mobile Emulator)
+- **Multi-device support**: Added iPhone SE, iPhone 12 Pro Max, Android Medium/Large, and Pixel Tablet
+- **Smooth device switching**: Implemented 0.4s cubic-bezier animations for seamless transitions
+- **Automatic scaling**: Devices now automatically scale to fit available space
+- **Enhanced error handling**: Comprehensive error detection with friendly messages and suggestions
+- **Performance optimization**: Added debounced compilation (500ms) and code caching
+- **Error boundaries**: Implemented runtime error protection to prevent app crashes
+- **Advanced demo app**: Feature-rich Todo List with priority management and filtering
+
+### Previous Updates (Chat)
 - General chat mode and UI overhaul
 - Markdown rendering and table support
 - Code block visual differentiation (HTML/CSS/JS)
@@ -245,6 +302,7 @@ Run these from Windows PowerShell or Command Prompt as needed.
 
 ## FAQ
 
+### General
 - Q: Where do I set the Judge0 API endpoint?
   A: In Vite env vars consumed by `src/utils/judge0.js` (`VITE_JUDGE0_URL`, etc.).
 
@@ -254,6 +312,19 @@ Run these from Windows PowerShell or Command Prompt as needed.
 - Q: Copy buttons do nothing.
   A: Use a secure context (HTTPS) or run locally with browser permissions.
 
+### Mobile Emulator
+- Q: Why is my device not scaling properly?
+  A: Check your browser viewport size. The emulator automatically scales to fit available space, but very small viewports may require manual browser zoom adjustment.
+
+- Q: My React Native code shows compilation errors.
+  A: Ensure you're using supported React Native components (View, Text, Button) and proper JavaScript syntax. Check the error messages for specific guidance.
+
+- Q: The emulator shows a white screen.
+  A: This usually indicates a JavaScript error in your code. Check the browser console for error details and ensure Babel is properly loaded.
+
+- Q: Can I add more device types?
+  A: Yes, you can add new devices by modifying the `DEVICES` object in `src/components/MobileEmulator.js` with your desired frame dimensions.
+
 ## License
 
 GPL-3.0 license.
@@ -261,7 +332,6 @@ GPL-3.0 license.
 ## Support
 
 Open an issue or contact the maintainers.
-
 
 
 
