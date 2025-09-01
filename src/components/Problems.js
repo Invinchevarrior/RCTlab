@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ALL_DIFFICULTY = ['Easy', 'Medium', 'Hard'];
 const PAGE_SIZE = 100;
@@ -12,7 +12,7 @@ function Problems() {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [allTags, setAllTags] = useState([]);
-  const history = useHistory();
+  const history = useNavigate();
   const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
   const [loading, setLoading] = useState(true);
@@ -87,12 +87,12 @@ function Problems() {
   };
 
   // Navigation and theme handling
-  const handleEditor = () => history.push('/');
-  const handleCodeRunner = () => history.push('/coderunner');
+  const handleEditor = () => history('/');
+  const handleCodeRunner = () => history('/coderunner');
   const handleLogout = () => {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
-    history.push('/login');
+    history('/login');
   };
   const handleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
@@ -194,7 +194,7 @@ function Problems() {
               <tr key={p._id} style={{ borderBottom: '1px solid #eee', cursor: 'pointer' }}>
                 <td style={{ padding: 8, verticalAlign: 'middle', textAlign: 'center' }}>{(page - 1) * PAGE_SIZE + idx + 1}</td>
                 <td style={{ verticalAlign: 'middle' }}>
-                  <span onClick={() => history.push(`/coderunner?id=${p._id}`)} style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}>{p.title}</span>
+                  <span onClick={() => history(`/coderunner?id=${p._id}`)} style={{ color: '#007bff', textDecoration: 'underline', cursor: 'pointer' }}>{p.title}</span>
                 </td>
                 <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>{p.tags.join(', ')}</td>
                 <td style={{ verticalAlign: 'middle', textAlign: 'center' }}>{p.difficulty}</td>

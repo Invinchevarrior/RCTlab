@@ -26,6 +26,37 @@ const Chat = ({ onCodeGenerated, isVisible, isMinimized, onClose, onMinimize }) 
   const messagesEndRef = useRef(null);
   const resizeHandleRef = useRef(null);
 
+  // Safe clipboard copy helper with fallbacks
+  const copyToClipboard = async (text) => {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch (err) {
+      // Fallback to legacy approach below
+      console.warn('navigator.clipboard.writeText failed, falling back to execCommand copy.', err);
+    }
+
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return successful;
+    } catch (fallbackErr) {
+      console.error('Fallback copy failed:', fallbackErr);
+      return false;
+    }
+  };
+
   // Hugging Face API key
   const HF_API_KEY = ""; // Replace with your key
   
@@ -181,12 +212,18 @@ const Chat = ({ onCodeGenerated, isVisible, isMinimized, onClose, onMinimize }) 
 
   // Function to send prompt to Hugging Face API using official format
   const sendPrompt = async (prompt) => {
-    const systemPrompt = `You are a helpful AI assistant. You can help with various topics including:
+    const systemPrompt = `You are a helpful AI assistant specialized in web development and React Native development. You can help with:
+
 - General questions and discussions
+- Web development (HTML, CSS, JavaScript)
+- React Native mobile app development
 - Code generation and programming help
 - Writing and creative tasks
 - Problem solving and analysis
-- And much more!
+
+When generating code, please provide it in the following format:
+- For web development: Use \`\`\`html, \`\`\`css, and \`\`\`javascript code blocks
+- For React Native: Use \`\`\`jsx code blocks for React Native components
 
 Please provide helpful, accurate, and engaging responses. If the user asks for code, you can provide it in a clear format. Otherwise, just have a natural conversation.`;
 
@@ -285,7 +322,9 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
       
       // check if contains code block, if so, try to extract
       let codeData = null;
-      if (aiResponse.includes('```html') || aiResponse.includes('```css') || aiResponse.includes('```javascript') || aiResponse.includes('```js')) {
+      if (aiResponse.includes('```html') || aiResponse.includes('```css') || 
+          aiResponse.includes('```javascript') || aiResponse.includes('```js') ||
+          aiResponse.includes('```jsx') || aiResponse.includes('```react')) {
         try {
           codeData = extractCodeFromResponse(aiResponse);
         } catch (e) {
@@ -325,17 +364,25 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
     const htmlMatch = response.match(/```html\s*([\s\S]*?)\s*```/i);
     const cssMatch = response.match(/```css\s*([\s\S]*?)\s*```/i);
     const jsMatch = response.match(/```(?:javascript|js)\s*([\s\S]*?)\s*```/i);
+    const jsxMatch = response.match(/```(?:jsx|react)\s*([\s\S]*?)\s*```/i);
 
     console.log("HTML match:", htmlMatch);
     console.log("CSS match:", cssMatch);
     console.log("JS match:", jsMatch);
+    console.log("JSX match:", jsxMatch);
 
-    if (htmlMatch || cssMatch || jsMatch) {
+    if (htmlMatch || cssMatch || jsMatch || jsxMatch) {
       const result = {
         html: htmlMatch ? htmlMatch[1].trim() : '',
         css: cssMatch ? cssMatch[1].trim() : '',
-        js: jsMatch ? jsMatch[1].trim() : ''
+        js: jsMatch ? jsMatch[1].trim() : '',
+        jsx: jsxMatch ? jsxMatch[1].trim() : ''
       };
+      
+      // Convert React Native code to Mobile Emulator compatible format
+      if (result.jsx) {
+        result.jsx = convertReactNativeToEmulatorFormat(result.jsx);
+      }
       
       console.log("Extracted code result:", result);
       return result;
@@ -343,6 +390,117 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
     
     console.log("No code blocks found");
     return null;
+  };
+
+  // Function to convert React Native code to Mobile Emulator compatible format
+  const convertReactNativeToEmulatorFormat = (jsxCode) => {
+    console.log("Converting React Native code to Emulator format:", jsxCode);
+    
+    let convertedCode = jsxCode;
+    
+    // 1. Ensure export default function App() format
+    if (!convertedCode.includes('export default function App()')) {
+      // Replace various export patterns with the required format
+      convertedCode = convertedCode.replace(
+        /export\s+default\s+(?:function\s+)?(\w+)/g,
+        'export default function App'
+      );
+      convertedCode = convertedCode.replace(
+        /const\s+(\w+)\s*=\s*\(\)\s*=>/g,
+        'export default function App()'
+      );
+      convertedCode = convertedCode.replace(
+        /function\s+(\w+)/g,
+        'export default function App'
+      );
+    }
+    
+    // 2. Convert useState to React.useState
+    convertedCode = convertedCode.replace(
+      /import\s*{\s*useState\s*}\s*from\s*['"]react['"]/g,
+      ''
+    );
+    convertedCode = convertedCode.replace(
+      /const\s*\[\s*(\w+),\s*(\w+)\s*\]\s*=\s*useState/g,
+      'const [$1, $2] = React.useState'
+    );
+    
+    // 3. Convert TextInput to input elements
+    convertedCode = convertedCode.replace(
+      /<TextInput\s+([^>]*?)>/g,
+      (match, props) => {
+        // Extract relevant props and convert to input element
+        const placeholder = props.match(/placeholder\s*=\s*['"]([^'"]*)['"]/);
+        const value = props.match(/value\s*=\s*\{([^}]*)\}/);
+        const onChange = props.match(/onChangeText\s*=\s*\{([^}]*)\}/);
+        
+        let inputProps = '';
+        if (placeholder) inputProps += ` placeholder="${placeholder[1]}"`;
+        if (value) inputProps += ` value={${value[1]}}`;
+        if (onChange) inputProps += ` onChange={${onChange[1]}}`;
+        
+        return `<input${inputProps} style={{ flex: 1, padding: 8, fontSize: 16, borderRadius: 4, border: '1px solid #ccc' }}>`;
+      }
+    );
+    convertedCode = convertedCode.replace(/<\/TextInput>/g, '');
+    
+    // 4. Convert TouchableOpacity with Text to Button
+    convertedCode = convertedCode.replace(
+      /<TouchableOpacity\s+([^>]*?)>\s*<Text\s+([^>]*?)>\s*([^<]*?)\s*<\/Text>\s*<\/TouchableOpacity>/g,
+      (match, touchableProps, textProps, buttonText) => {
+        const onPress = touchableProps.match(/onPress\s*=\s*\{([^}]*)\}/);
+        const onPressProp = onPress ? ` onPress={${onPress[1]}}` : '';
+        return `<Button title="${buttonText.trim()}"${onPressProp} />`;
+      }
+    );
+    
+    // 5. Ensure proper View container with required styles
+    if (convertedCode.includes('<View style=')) {
+      convertedCode = convertedCode.replace(
+        /<View\s+style\s*=\s*\{([^}]*)\}/g,
+        (match, styles) => {
+          // Check if required styles are present
+          if (!styles.includes('minHeight') || !styles.includes('minWidth') || !styles.includes('boxSizing')) {
+            return `<View style={{ flex: 1, minHeight: '100%', minWidth: '100%', backgroundColor: '#f5f5f5', padding: 0, margin: 0, boxSizing: 'border-box', justifyContent: 'flex-start' }}`;
+          }
+          return match;
+        }
+      );
+    }
+    
+    // 6. Convert onChangeText to onChange for input elements
+    convertedCode = convertedCode.replace(/onChangeText/g, 'onChange');
+    
+    // 7. Ensure proper checkbox handling
+    convertedCode = convertedCode.replace(
+      /<input\s+type\s*=\s*['"]checkbox['"]\s+([^>]*?)>/g,
+      (match, props) => {
+        const checked = props.match(/checked\s*=\s*\{([^}]*)\}/);
+        const onChange = props.match(/onChange\s*=\s*\{([^}]*)\}/);
+        
+        let checkboxProps = '';
+        if (checked) checkboxProps += ` checked={${checked[1]}}`;
+        if (onChange) checkboxProps += ` onChange={${onChange[1]}}`;
+        
+        return `<input type="checkbox"${checkboxProps} style={{ marginRight: 12 }}>`;
+      }
+    );
+    
+    // 8. Add proper imports if missing
+    if (!convertedCode.includes('import React')) {
+      convertedCode = 'import React from \'react\';\n' + convertedCode;
+    }
+    
+    // 9. Add View and Text imports if missing
+    if (!convertedCode.includes('import { View, Text }')) {
+      convertedCode = convertedCode.replace(
+        /import React from ['"]react['"];?/,
+        'import React from \'react\';\nimport { View, Text, Button } from \'react-native\';'
+      );
+    }
+    
+    console.log("Converted code:", convertedCode);
+    return convertedCode;
   };
 
   // Helper function to extract text content from a string, excluding code blocks
@@ -372,6 +530,12 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
     if (codeData.js) {
       const jsPattern = /```(?:javascript|js)\s*([\s\S]*?)\s*```/gi;
       content = content.replace(jsPattern, '').trim();
+    }
+    
+    // remove JSX/React Native code block
+    if (codeData.jsx) {
+      const jsxPattern = /```(?:jsx|react)\s*([\s\S]*?)\s*```/gi;
+      content = content.replace(jsxPattern, '').trim();
     }
     
     // clean up extra empty lines and spaces
@@ -497,7 +661,7 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
     );
   }
 
-    return (
+  return (
           <div 
         className={`chat-window ${isResizing ? 'resizing' : ''}`}
         style={{ 
@@ -564,7 +728,7 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
                                <strong>HTML</strong>
                                <button 
                                  className="copy-code-btn" 
-                                 onClick={() => navigator.clipboard.writeText(msg.code.html)}
+                                 onClick={() => copyToClipboard(msg.code.html)}
                                  title="Copy HTML code"
                                >
                                  <span role="img" aria-label="Copy">📋</span>
@@ -579,7 +743,7 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
                                <strong>CSS</strong>
                                <button 
                                  className="copy-code-btn" 
-                                 onClick={() => navigator.clipboard.writeText(msg.code.css)}
+                                 onClick={() => copyToClipboard(msg.code.css)}
                                  title="Copy CSS code"
                                >
                                  <span role="img" aria-label="Copy">📋</span>
@@ -594,13 +758,28 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
                                <strong>JavaScript</strong>
                                <button 
                                  className="copy-code-btn" 
-                                 onClick={() => navigator.clipboard.writeText(msg.code.js)}
+                                 onClick={() => copyToClipboard(msg.code.js)}
                                  title="Copy JavaScript code"
                                >
                                  <span role="img" aria-label="Copy">📋</span>
                                </button>
                              </div>
                              <pre className="code-block js-code"><code>{msg.code.js}</code></pre>
+                           </>
+                         )}
+                         {msg.code.jsx && (
+                           <>
+                             <div className="code-label">
+                               <strong>React Native</strong>
+                               <button 
+                                 className="copy-code-btn" 
+                                 onClick={() => copyToClipboard(msg.code.jsx)}
+                                 title="Copy React Native code"
+                               >
+                                 <span role="img" aria-label="Copy">📋</span>
+                               </button>
+                             </div>
+                             <pre className="code-block jsx-code"><code>{msg.code.jsx}</code></pre>
                            </>
                          )}
                       </div>
@@ -618,7 +797,7 @@ Please provide helpful, accurate, and engaging responses. If the user asks for c
                   <div className="message-actions">
                     <button 
                       className="copy-btn" 
-                      onClick={() => navigator.clipboard.writeText(msg.text)}
+                      onClick={() => copyToClipboard(msg.text)}
                       title="Copy message"
                     >
                       <span role="img" aria-label="Copy">📋</span>

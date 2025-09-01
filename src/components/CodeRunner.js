@@ -5,7 +5,7 @@ import 'codemirror/theme/material.css';
 import 'codemirror/theme/eclipse.css';
 import 'codemirror/mode/python/python';
 import 'codemirror/mode/clike/clike';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const DEFAULT_CODE = {
   'Python 2.7 (PyPy 7.3.12)': 'def add(a, b):\n    return a + b\n\nprint add(1, 2)',
@@ -69,7 +69,7 @@ function CodeRunner() {
   const [loading, setLoading] = useState(false);
   const [warnings, setWarnings] = useState('');
   const [outputColor, setOutputColor] = useState('#23272f');
-  const history = useHistory();
+  const navigate = useNavigate();
   const query = useQuery();
   const [problem, setProblem] = useState(null);
   const [problemLoading, setProblemLoading] = useState(false);
@@ -241,8 +241,8 @@ function CodeRunner() {
         <div className="code-runner-nav">
           <div className="code-runner-title">Code Runner</div>
           <div className="code-runner-actions">
-            <button className="code-runner-nav-btn" onClick={() => history.push('/problems')}>Problems</button>
-            <button className="code-runner-nav-btn" onClick={() => history.push('/')}>Back to Editor</button>
+                    <button className="code-runner-nav-btn" onClick={() => navigate('/problems')}>Problems</button>
+        <button className="code-runner-nav-btn" onClick={() => navigate('/')}>Back to Editor</button>
             <button 
               className="code-runner-nav-btn ai-chat-btn" 
               onClick={() => {

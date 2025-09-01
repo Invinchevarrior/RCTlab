@@ -352,6 +352,11 @@
   border-left: 4px solid #805ad5 !important;
 }
 
+.code-block.jsx-code {
+  background: #f0f9ff !important;
+  border-left: 4px solid #0ea5e9 !important;
+}
+
 .code-block code {
   color: #2d3748 !important;
   font-weight: 500;

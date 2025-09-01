@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Editor from './Editor'
 import Login from './Login'
 import Register from './Register'
@@ -13,26 +13,23 @@ import GlobalChatManager from './GlobalChatManager';
 function App() {
   return (
     <>
-      <Switch>
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/coderunner" component={CodeRunner} />
-        <Route path="/problems/:id" component={ProblemDetail} />
-        <Route path="/problems" component={Problems} />
-        <Route path="/emulator" component={MobileEmulator} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/coderunner" element={<CodeRunner />} />
+        <Route path="/problems/:id" element={<ProblemDetail />} />
+        <Route path="/problems" element={<Problems />} />
+        <Route path="/emulator" element={<MobileEmulator />} />
         <Route
-          exact
           path="/"
-          render={() =>
+          element={
             localStorage.getItem('currentUser')
               ? <EditorPage />
-              : <Redirect to="/login" />
+              : <Navigate to="/login" replace />
           }
         />
-        <Redirect to="/login" />
-      </Switch>
-      
-      {/* global AI chat manager */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
       <GlobalChatManager />
     </>
   )
@@ -179,7 +176,7 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
   const [srcDoc, setSrcDoc] = useState('')
   const [theme, setTheme] = useState('light')
   const [widths, setWidths] = useState([33.33, 33.33, 33.34]) // Three-column width percentage
-  const history = useHistory()
+  const history = useNavigate()
   const user = JSON.parse(localStorage.getItem('currentUser') || '{}')
 
 
@@ -203,15 +200,15 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
 
   const handleLogout = () => {
     localStorage.removeItem('currentUser')
-    history.push('/login')
+    history('/login')
   }
 
   const handleCodeRunner = () => {
-    history.push('/coderunner')
+    history('/coderunner')
   }
 
   const handleProblems = () => {
-    history.push('/problems')
+    history('/problems')
   }
 
   // listen to global code generation event
@@ -252,7 +249,7 @@ document.getElementById('todoInput')?.addEventListener('keypress', function(e) {
         <div className="toolbar">
           <button onClick={handleProblems}>Problems</button>
           <button onClick={handleCodeRunner}>Code Runner</button>
-          <button onClick={() => history.push('/emulator')}>
+          <button onClick={() => history('/emulator')}>
             Mobile Emulator
           </button>
                     <button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 // This is a mock problem map. In a real application, this data would likely come from an API or database.
 const PROBLEM_MAP = {
@@ -51,14 +51,14 @@ const PROBLEM_MAP = {
 
 function ProblemDetail() {
   const { id } = useParams();
-  const history = useHistory();
+  const history = useNavigate();
   const problem = PROBLEM_MAP[id];
 
   if (!problem) return <div style={{ padding: 32 }}>Problem not found.</div>;
 
   return (
     <div style={{ padding: 32, maxWidth: 800, margin: '0 auto' }}>
-      <button onClick={() => history.push('/problems')} style={{ marginBottom: 16 }}>&lt; Back to Problems</button>
+      <button onClick={() => history('/problems')} style={{ marginBottom: 16 }}>&lt; Back to Problems</button>
       <h2>{problem.title}</h2>
       <div style={{ margin: '12px 0', color: '#888' }}>
         <b>Difficulty:</b> {problem.difficulty} &nbsp; | &nbsp;

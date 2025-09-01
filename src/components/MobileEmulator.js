@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import EmulatorScreen from './EmulatorScreen';
 import { Controlled as ControlledEditor } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
@@ -92,7 +92,7 @@ const initialCode = `export default function App() {
 
 function MobileEmulator() {
   const [code, setCode] = useState(initialCode);
-  const history = useHistory();
+  const history = useNavigate();
 
   // React Native logo (public domain)
   const rnLogo = 'https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg';
@@ -110,7 +110,7 @@ function MobileEmulator() {
           >
             AI Chat
           </button>
-          <button className="mobile-emulator-back" onClick={() => history.push('/')}>Back to Editor</button>
+          <button className="mobile-emulator-back" onClick={() => history('/')}>Back to Editor</button>
         </div>
       </div>
       <div className="mobile-emulator-container">
