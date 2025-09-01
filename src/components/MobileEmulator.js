@@ -8,6 +8,15 @@ import 'codemirror/theme/eclipse.css';
 import 'codemirror/mode/javascript/javascript';
 import './MobileEmulator.css';
 
+// Preset devices (frame size inside the phone frame)
+const DEVICES = {
+  'iPhone SE (2nd gen)': { frameWidth: 320, frameHeight: 568 },
+  'iPhone 12 Pro Max': { frameWidth: 428, frameHeight: 926 },
+  'Android Medium (360x740)': { frameWidth: 360, frameHeight: 740 },
+  'Android Large (412x915)': { frameWidth: 412, frameHeight: 915 },
+  'Pixel Tablet (834x1194)': { frameWidth: 834, frameHeight: 1194 }
+};
+
 const initialCode = `export default function App() {
   // State
   const [todos, setTodos] = React.useState([
@@ -315,6 +324,7 @@ function MobileEmulator() {
   const [code, setCode] = useState(initialCode);
   const [compilationError, setCompilationError] = useState(null);
   const [compileStatus, setCompileStatus] = useState('success'); // compiling | success | error
+  const [selectedDeviceKey, setSelectedDeviceKey] = useState('Android Medium (360x740)');
   const errorTimerRef = useRef(null);
   const history = useNavigate();
 
@@ -350,6 +360,22 @@ function MobileEmulator() {
     };
   }, []);
 
+  const device = DEVICES[selectedDeviceKey];
+
+  // Compute scale to ensure phone fits completely in left pane
+  // Account for padding, selector height, and phone frame border (16px each side)
+  const maxAvailableWidth = 450; // Conservative estimate for left pane width
+  const maxAvailableHeight = window.innerHeight * 0.8; // 80% of viewport height
+  const phoneFramePadding = 32; // 16px border on each side
+  
+  const scaleForWidth = (device.frameWidth + phoneFramePadding) > maxAvailableWidth ? 
+    maxAvailableWidth / (device.frameWidth + phoneFramePadding) : 1;
+  const scaleForHeight = (device.frameHeight + phoneFramePadding) > maxAvailableHeight ? 
+    maxAvailableHeight / (device.frameHeight + phoneFramePadding) : 1;
+  
+  // Use the smaller scale to ensure it fits both dimensions
+  const scale = Math.min(scaleForWidth, scaleForHeight, 1);
+
   return (
     <div className="mobile-emulator-root">
       <div className="mobile-emulator-header">
@@ -383,12 +409,34 @@ function MobileEmulator() {
       
       <div className="mobile-emulator-container">
         <div className="emulator-left">
-          <EmulatorScreen 
-            code={code} 
-            onError={handleCompilationError}
-            onStatusChange={handleStatusChange}
-            theme="light"
-          />
+          <div className="device-selector-container">
+            <select 
+              value={selectedDeviceKey} 
+              onChange={(e) => setSelectedDeviceKey(e.target.value)} 
+              className="device-selector"
+            >
+              {Object.keys(DEVICES).map((k) => (
+                <option key={k} value={k}>{k}</option>
+              ))}
+            </select>
+          </div>
+          <div className="emulator-container">
+            <div 
+              className="emulator-wrapper"
+              style={{ 
+                transform: `scale(${scale})`,
+                transformOrigin: 'center center'
+              }}
+            >
+              <EmulatorScreen 
+                code={code} 
+                onError={handleCompilationError}
+                onStatusChange={handleStatusChange}
+                device={device}
+                theme="light"
+              />
+            </div>
+          </div>
         </div>
         <div className="emulator-right" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
           <div className="emulator-info-bar">

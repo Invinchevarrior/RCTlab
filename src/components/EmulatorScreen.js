@@ -14,13 +14,17 @@ const Button = ({ title = 'Button', onPress, style }) => (
   <button style={{ margin: 8, padding: '8px 16px', ...style }} onClick={onPress}>{title}</button>
 );
 
-function EmulatorScreen({ code, onError, onStatusChange, theme = 'light' }) {
+function EmulatorScreen({ code, onError, onStatusChange, theme = 'light', device }) {
   const [error, setError] = useState('');
   const [AppComponent, setAppComponent] = useState(null);
   const [errors, setErrors] = useState([]);
   const [errorLocation, setErrorLocation] = useState(null);
   const [codeCache, setCodeCache] = useState(new Map());
   const [isCompiling, setIsCompiling] = useState(false);
+
+  // Compute frame size (fallback to defaults)
+  const frameWidth = device && device.frameWidth ? device.frameWidth : 320;
+  const frameHeight = device && device.frameHeight ? device.frameHeight : 640;
 
   // Parse error message and provide friendly suggestions
   const parseError = useCallback((error) => {
@@ -206,7 +210,7 @@ function EmulatorScreen({ code, onError, onStatusChange, theme = 'light' }) {
   }, []);
 
   return (
-    <div className="emulator-phone-frame">
+    <div className="emulator-phone-frame" style={{ width: frameWidth, height: frameHeight }}>
       <div className="emulator-phone-screen" style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
         {isCompiling ? (
           <div style={{ 
@@ -270,7 +274,11 @@ EmulatorScreen.propTypes = {
   code: PropTypes.string.isRequired,
   onError: PropTypes.func,
   onStatusChange: PropTypes.func,
-  theme: PropTypes.oneOf(['light', 'dark'])
+  theme: PropTypes.oneOf(['light', 'dark']),
+  device: PropTypes.shape({
+    frameWidth: PropTypes.number,
+    frameHeight: PropTypes.number
+  })
 };
 
 // Default props

@@ -10,10 +10,58 @@ body {
 .emulator-left {
   flex: 3;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background: #f5f5f5;
   min-width: 0;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.device-selector-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.device-selector {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.device-selector:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.device-selector:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.emulator-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  overflow: hidden;
+}
+
+.emulator-wrapper {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .emulator-right {
   flex: 7;
@@ -37,6 +85,8 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .emulator-phone-screen {
   width: 288px;
@@ -45,6 +95,8 @@ body {
   border-radius: 24px;
   overflow: hidden;
   position: relative;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+              height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .emulator-info-bar {
   display: flex;
