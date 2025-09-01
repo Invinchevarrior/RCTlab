@@ -1,17 +1,22 @@
 # RCTlab
 
-A React-based coding platform for learning and practicing programming problems.
+A React-based coding platform for learning and practicing programming problems with advanced mobile emulation and AI assistance.
 
 For a comprehensive guide covering features, setup, AI Chat, Judge0, troubleshooting and more, see: `RCTlab_Complete_Guide.md`.
 
 ## Features
 
-- **Code Editor**: Built-in code editor with syntax highlighting
-- **Problem Sets**: Curated collection of programming problems
-- **Code Execution**: Run and test your code in real-time
-- **Mobile Emulator**: Test your web applications on mobile devices
-- **User Authentication**: Secure login and registration system
-- **Progress Tracking**: Monitor your learning progress
+- **Advanced Code Editor**: Built-in code editor with syntax highlighting, auto-completion, and real-time error detection
+- **Problem Sets**: Curated collection of programming problems with detailed solutions
+- **Code Execution**: Run and test your code in real-time using Judge0 integration
+- **Enhanced Mobile Emulator**: Multi-device emulation with responsive design testing
+  - Support for iPhone SE, iPhone 12 Pro Max, Android devices, and Pixel Tablet
+  - Smooth device switching with automatic scaling
+  - Real-time React Native code preview with error handling
+  - Advanced Todo List demo with priority management and filtering
+- **AI Chat Assistant**: Intelligent coding assistant with markdown rendering and code extraction
+- **User Authentication**: Secure JWT-based login and registration system
+- **Progress Tracking**: Monitor your learning progress and problem-solving statistics
 
 ## Tech Stack
 
@@ -19,8 +24,10 @@ For a comprehensive guide covering features, setup, AI Chat, Judge0, troubleshoo
 - React 16.13.1
 - React Router DOM
 - Axios for API calls
-- CodeMirror for code editing
-- Prism.js for syntax highlighting
+- CodeMirror for code editing with advanced features
+- Lodash for utility functions and debouncing
+- PropTypes for type validation
+- Real-time code compilation and error handling
 
 ### Backend
 - Node.js with Express
@@ -32,6 +39,8 @@ For a comprehensive guide covering features, setup, AI Chat, Judge0, troubleshoo
 - Webpack for bundling
 - Hot reloading for development
 - CORS enabled for cross-origin requests
+- ESLint for code quality
+- Error boundaries for robust error handling
 
 ## Getting Started
 
