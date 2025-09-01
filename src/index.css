@@ -210,6 +210,29 @@ body {
   font-size: 14px;
 }
 
+.auth-container .error-container {
+  background: #fed7d7;
+  border: 1px solid #feb2b2;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 12px 0;
+}
+
+.auth-container .error-container .error {
+  color: #c53030;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  text-align: left;
+}
+
+.auth-container .error-container .error-help {
+  color: #744210;
+  font-size: 12px;
+  margin: 0;
+  text-align: left;
+  line-height: 1.4;
+}
+
 .auth-container .success {
   color: #38a169;
   margin: 8px 0;
